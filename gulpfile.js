@@ -28,7 +28,7 @@ gulp.task('es6', function() {
 });
 
 gulp.task('watch',function() {
-	gulp.watch('**/*.js',['es6'])
+	gulp.watch('**/*.js',{debounceDelay: 5000},['es6'])
 });
  
 gulp.task('default', ['watch']);

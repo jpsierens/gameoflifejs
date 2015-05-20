@@ -9,10 +9,11 @@
   "author": "Jean-Pierre Sierens",
   "license": "BSD-2-Clause",
   "devDependencies": {
-    "gulp": "~3.8.11",
-    "browserify": "~10.2.0",
     "babelify": "~6.1.1",
-    "vinyl-source-stream": "~1.1.0",
-    "gulp-util": "~3.0.4"
+    "browserify": "~10.2.0",
+    "gulp": "~3.8.11",
+    "gulp-util": "~3.0.4",
+    "jquery": "^2.1.4",
+    "vinyl-source-stream": "~1.1.0"
   }
 }
