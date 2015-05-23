@@ -23,11 +23,11 @@ class Universe {
 					y:i*this.cellHeight,
 					neighbours: [
 						// top neighbours
-						id-16, id-15, id-14,
+						id-this.length-1, id-this.length, id-this.length+1,
 						// side neigbours
 						id-1, id+1,
 						//bottom neigbours
-						id+14, id+15, id+16 
+						id+this.length-1, id+this.length, id+this.length+1 
 					]
 				});
 			}

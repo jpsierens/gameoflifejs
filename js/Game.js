@@ -5,6 +5,7 @@ class Game {
 		this.ctx = options.context;
 		this.universe = options.universe;
 		this.universeElem = document.getElementById('universe');
+		this.speed = options.speed;
 	}
 	// initial set up
 	iniSetUp() {
@@ -17,12 +18,10 @@ class Game {
 	}
 	// start the game
 	play(e){
-		var self = this;
 		// remove god mode
-		console.log('play game!');
 		this.universeElem.removeEventListener('click', loopCells);
 		// game loop
-		setInterval(step.bind(this), 200);
+		setInterval(step.bind(this), this.speed);
 	}
 	// draw grid
 	drawGrid() {
@@ -71,61 +70,75 @@ function loopCells(e) {
 function handleClick(self, cell, pageX, pageY){
 	if (pageX > cell.x && pageX < cell.x+self.universe.cellLength &&
 				pageY > cell.y && pageY < cell.y+self.universe.cellHeight ) {
-		console.log(cell)
-		if (cell.state === 0) {
-			// make the cell alive
-			cell.state = 1;
-			// paint the block
-			self.ctx.fillStyle = '#333';
-			self.ctx.fillRect(cell.x+1, cell.y+1, 
-				self.universe.cellLength-2, self.universe.cellHeight-2);
-		}else {
-			// make the cell dead
-			cell.state = 0;
-			// paint the block
-			self.ctx.fillStyle = 'white';
-			self.ctx.fillRect(cell.x+1, cell.y+1, 
-				self.universe.cellLength-2, self.universe.cellHeight-2);
-		}
+		changeCells(self, cell);
 	}
 }
 
 // 1 step = 1 generation
 function step(){
 	var self = this;
+	var cellsToChange = [];
 	for (let i = 0; i<this.universe.height; i++){
 		for (let j=0; j<this.universe.length; j++){
 			let cell = this.universe.cells[i][j];
-			transitions(self, cell);
+			transitions(self, cell, cellsToChange);
 		}
+	}
+	// update the cells that should be updated
+	for (let i=0; i<cellsToChange.length; i++){
+		let cell = getCellById(self, cellsToChange[i]);
+		// if the cell state was 0 change to 1, and vice versa.
+		changeCells(self, cell);
 	}
 }
 
-function transitions(self, cell) {
+/*
+*	pass the cell through the 4 rules. 
+	Note: cells should not update here, since altering 1 before you can
+	analyze the others will cause erroneous outcomes.
+*/
+function transitions(self, cell, cellsToChange) {
+	var uniLength = self.universe.length;
+	var uniHeight = self.universe.height;
+	var neighboursAlive = 0;
+	// Go through the neighbours of each cell.
+	for (let i=0; i<8; i++){
+		let neighbourID = cell.neighbours[i];
+		if (neighbourID >= uniLength*uniHeight || neighbourID <0) continue;
+		let neighbour = getCellById(self, neighbourID);
+		if (neighbour.state === 1) neighboursAlive++;
+	}
 	if (cell.state === 1){
 		// ze life rules
 		// -------------------
-		var uniLength = self.universe.length;
-		var uniHeight = self.universe.height;
-		var neighboursAlive = 0;
-		for (let i=0; i<8; i++){
-			let neighbourID = cell.neighbours[i];
-			if (neighbourID >= uniLength*uniHeight || neighbourID <0) continue;
-			let row = Math.floor(neighbourID/self.universe.length);
-			let column = neighbourID % self.universe.length;
-			let neighbour = self.universe.cells[row][column];
-			if (neighbour.state === 1) neighboursAlive++;
-		}
-		// Any live cell with fewer than two live neighbours dies, as 
+		// 1) Any live cell with fewer than two live neighbours dies, as 
 		// if caused by under-population.
-		if (neighboursAlive < 2) {
-			cell.state = 0;
-			self.ctx.fillStyle = 'white';
-			self.ctx.fillRect(cell.x+1, cell.y+1, 
-				self.universe.cellLength-2, self.universe.cellHeight-2);
-		}
+		// 2) Any live cell with two or three live neighbours lives on to 
+		// the next generation.
+		if (neighboursAlive < 2) cellsToChange.push(cell.id);
+		// 3) Any live cell with more than three live neighbours dies, as if 
+		// by overcrowding.
+		else if (neighboursAlive > 3) cellsToChange.push(cell.id);
+	}
+	else {
+		// 4) Any dead cell with exactly three live neighbours becomes a 
+		// live cell, as if by reproduction.
+		if (neighboursAlive === 3) cellsToChange.push(cell.id);
 	}
 }
+
+function changeCells(self, cell) {
+	self.ctx.fillStyle = (cell.state) ? 'white' : '#333';
+	self.ctx.fillRect(cell.x+1, cell.y+1, 
+			self.universe.cellLength-2, self.universe.cellHeight-2);
+	cell.state = (cell.state) ? 0 : 1;
+}
+
+function getCellById(self, id) {
+	let row = Math.floor(id/self.universe.length);
+	let column = id % self.universe.length;
+	return self.universe.cells[row][column];
+} 
 
 
 module.exports = Game;
