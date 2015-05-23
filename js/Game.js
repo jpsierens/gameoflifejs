@@ -105,20 +105,22 @@ function transitions(self, cell) {
 	if (cell.state === 1){
 		// ze life rules
 		// -------------------
-		// Any live cell with fewer than two live neighbours dies, as 
-		// if caused by under-population.
+		var uniLength = self.universe.length;
+		var uniHeight = self.universe.height;
 		var neighboursAlive = 0;
 		for (let i=0; i<8; i++){
 			let neighbourID = cell.neighbours[i];
+			if (neighbourID >= uniLength*uniHeight || neighbourID <0) continue;
 			let row = Math.floor(neighbourID/self.universe.length);
 			let column = neighbourID % self.universe.length;
 			let neighbour = self.universe.cells[row][column];
 			if (neighbour.state === 1) neighboursAlive++;
 		}
+		// Any live cell with fewer than two live neighbours dies, as 
+		// if caused by under-population.
 		if (neighboursAlive < 2) {
-			console.log('kill!');
-			console.log(cell.x)
 			cell.state = 0;
+			self.ctx.fillStyle = 'white';
 			self.ctx.fillRect(cell.x+1, cell.y+1, 
 				self.universe.cellLength-2, self.universe.cellHeight-2);
 		}
