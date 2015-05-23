@@ -15,11 +15,20 @@ class Universe {
 			for (let j = 0; j<this.length; j++) {
 				// assign each cell a structure with the id, state and 
 				// coordinates of that cell
+				let id = i*this.length+j
 				this.cells[i].push({
-					id:i*this.length+j, 
+					id, 
 					state:0,
 					x:j*this.cellLength,
-					y:i*this.cellHeight
+					y:i*this.cellHeight,
+					neighbours: [
+						// top neighbours
+						id-16, id-15, id-14,
+						// side neigbours
+						id-1, id+1,
+						//bottom neigbours
+						id+14, id+15, id+16 
+					]
 				});
 			}
 		}

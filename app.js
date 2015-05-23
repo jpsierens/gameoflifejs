@@ -20,7 +20,7 @@ var canvas = document.getElementById('universe');
 var ctx = canvas.getContext('2d');
 
 var game = new Game({
-	// ES6: enhanced object literals
+	// enhanced object literals
 	// 'canvas,' is the same as 'canvas: canvas,'
 	canvas,
 	context: ctx,
@@ -28,21 +28,4 @@ var game = new Game({
 });
 game.drawGrid();
 game.iniSetUp();
-
-// ctx.strokeStyle = '#777';
-// ctx.lineWidth = 1;
-// // vertical lines
-// for (let i = 1; i<UNIVERSE_LENGTH; i++){
-// 	ctx.beginPath();
-// 	ctx.moveTo(CELL_LENGTH*i,0);
-// 	ctx.lineTo(CELL_LENGTH*i, UNIVERSE_HEIGHT*CELL_LENGTH);
-// 	ctx.stroke();
-// }
-// // horizontal lines
-// for (let i = 1; i<UNIVERSE_HEIGHT; i++){
-// 	ctx.beginPath();
-// 	ctx.moveTo(0,CELL_LENGTH*i);
-// 	ctx.lineTo(UNIVERSE_LENGTH*CELL_LENGTH, CELL_LENGTH*i);
-// 	ctx.stroke();
-// }
 
