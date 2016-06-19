@@ -1,27 +1,44 @@
 class Game {
 	// set up instance variables
 	constructor(options){
+        this.timer = null;
 		this.canvas = options.canvas;
 		this.ctx = options.context;
 		this.universe = options.universe;
 		this.universeElem = document.getElementById('universe');
 		this.speed = options.speed;
+
+		// store refeences to bound listeners since otherwise you can't remove the listeners
+		this.stopListener = this.stop.bind(this);
+		this.playListener = this.play.bind(this);
 	}
 	// initial set up
 	iniSetUp() {
-		// Note: using bind to pass the class' context to the callbacks
-		// not sure if this can be improved.
-		this.universeElem.addEventListener('click', loopCells.bind(this));
-		// when user click, start the game
-		document.getElementById('start')
-			.addEventListener('click', this.play.bind(this));
+		/* this indirection is tacky but when, in method stop() I tried to call 
+		   iniSetup() using this.iniSetup() I got an error, very odd.  So I made this private 
+		   function doSetup so it could be called from iniSetup and stop */
+		doSetup.call(this);
 	}
-	// start the game
+    // stop the game
+    stop(e) {
+        // remove restart listener, it'll be added again if game start clicked
+        document.getElementById('stop').removeEventListener('click', this.stopListener);
+        // stop the timer
+        clearInterval(this.timer);
+        // reinitialise the game
+        // this.iniSetup(); // causes an error "this.iniSetup is not a function!? bizarre"
+        doSetup.call(this);
+    }
+    // start the game
 	play(e){
+        // add click event to stop button
+        document.getElementById('stop').addEventListener('click', this.stopListener);
+        // remove the play click listener
+        document.getElementById('start').removeEventListener('click', this.playListener);
 		// remove god mode
 		this.universeElem.removeEventListener('click', loopCells);
-		// game loop
-		setInterval(step.bind(this), this.speed);
+		// game loop, store handle for restart to stop the timer
+		this.timer = setInterval(step.bind(this), this.speed);
 	}
 	// draw grid
 	drawGrid() {
@@ -48,6 +65,14 @@ class Game {
 
 // Private methods
 // --------------------
+
+function doSetup() {
+	// Note: using bind to pass the class' context to the callbacks
+	// not sure if this can be improved.
+	this.universeElem.addEventListener('click', loopCells.bind(this));
+	// when user click, start the game
+	document.getElementById('start').addEventListener('click', this.playListener);
+}
 
 // Loop over the cells
 function loopCells(e) {
