@@ -11,6 +11,7 @@ class Game {
 		// store refeences to bound listeners since otherwise you can't remove the listeners
 		this.stopListener = this.stop.bind(this);
 		this.playListener = this.play.bind(this);
+		this.loopCellsListener = loopCells.bind(this);
 	}
 	// initial set up
 	iniSetUp() {
@@ -29,14 +30,14 @@ class Game {
         // this.iniSetup(); // causes an error "this.iniSetup is not a function!? bizarre"
         doSetup.call(this);
     }
-    // start the game
+	// start the game
 	play(e){
         // add click event to stop button
         document.getElementById('stop').addEventListener('click', this.stopListener);
         // remove the play click listener
         document.getElementById('start').removeEventListener('click', this.playListener);
 		// remove god mode
-		this.universeElem.removeEventListener('click', loopCells);
+		this.universeElem.removeEventListener('click', this.loopCellsListener);
 		// game loop, store handle for restart to stop the timer
 		this.timer = setInterval(step.bind(this), this.speed);
 	}
@@ -47,17 +48,17 @@ class Game {
 		// vertical lines
 		for (let i = 1; i<this.universe.length; i++){
 			this.ctx.beginPath();
-			this.ctx.moveTo(this.universe.cellLength*i,0);
+			this.ctx.moveTo(this.universe.cellLength*i, 0);
 			this.ctx.lineTo(this.universe.cellLength*i, 
-				this.universe.height*this.universe.cellHeight);
+				            this.universe.height*this.universe.cellHeight);
 			this.ctx.stroke();
 		}
 		// horizontal lines
 		for (let i = 1; i<this.universe.height; i++){
 			this.ctx.beginPath();
-			this.ctx.moveTo(0,this.universe.cellHeight*i);
+			this.ctx.moveTo(0, this.universe.cellHeight*i);
 			this.ctx.lineTo(this.universe.length*this.universe.cellLength, 
-				this.universe.cellHeight*i);
+				            this.universe.cellHeight*i);
 			this.ctx.stroke();
 		}
 	}
@@ -69,33 +70,28 @@ class Game {
 function doSetup() {
 	// Note: using bind to pass the class' context to the callbacks
 	// not sure if this can be improved.
-	this.universeElem.addEventListener('click', loopCells.bind(this));
+	this.universeElem.addEventListener('click', this.loopCellsListener);
 	// when user click, start the game
 	document.getElementById('start').addEventListener('click', this.playListener);
 }
 
+
 // Loop over the cells
 function loopCells(e) {
-	var universeElem = document.getElementById('universe');
+	var universeElem = this.universeElem;
 	var pageX = e.pageX - universeElem.offsetLeft;
 	var pageY = e.pageY - universeElem.offsetTop;
 
 	for (let i = 0; i<this.universe.height; i++){
 		for (let j=0; j<this.universe.length; j++){
 			let cell = this.universe.cells[i][j];
-			handleClick(this, cell, pageX, pageY);
+			// handle the click
+			if (pageX > cell.x && pageX < cell.x+this.universe.cellLength &&
+				pageY > cell.y && pageY < cell.y+this.universe.cellHeight ) {
+				// chnage the cells
+			    changeCells.apply(this, [cell]);
+			}
 		}
-	}
-}
-
-// give life or death to the cell clicked.
-// Note: because loopCells is a callback which has the class context
-// bound to it, this function which is called in the callback doesn't get the
-// context implicitly, so I must pass it. Doesn't feel clean...
-function handleClick(self, cell, pageX, pageY){
-	if (pageX > cell.x && pageX < cell.x+self.universe.cellLength &&
-				pageY > cell.y && pageY < cell.y+self.universe.cellHeight ) {
-		changeCells(self, cell);
 	}
 }
 
@@ -113,7 +109,7 @@ function step(){
 	for (let i=0; i<cellsToChange.length; i++){
 		let cell = getCellById(self, cellsToChange[i]);
 		// if the cell state was 0 change to 1, and vice versa.
-		changeCells(self, cell);
+		changeCells.apply(this, [cell]);
 	}
 }
 
@@ -152,10 +148,12 @@ function transitions(self, cell, cellsToChange) {
 	}
 }
 
-function changeCells(self, cell) {
-	self.ctx.fillStyle = (cell.state) ? 'white' : '#333';
-	self.ctx.fillRect(cell.x+1, cell.y+1, 
-			self.universe.cellLength-2, self.universe.cellHeight-2);
+function changeCells(cell) {
+	this.ctx.fillStyle = (cell.state) ? 'white' : '#333';
+	this.ctx.fillRect(cell.x+1, 
+		              cell.y+1, 
+			          this.universe.cellLength-2, 
+			          this.universe.cellHeight-2);
 	cell.state = (cell.state) ? 0 : 1;
 }
 
