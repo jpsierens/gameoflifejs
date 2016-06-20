@@ -12,13 +12,16 @@ class Game {
 		this.stopListener = this.stop.bind(this);
 		this.playListener = this.play.bind(this);
 		this.loopCellsListener = loopCells.bind(this);
-	}
-	// initial set up
-	iniSetUp() {
-		/* this indirection is tacky but when, in method stop() I tried to call 
-		   iniSetup() using this.iniSetup() I got an error, very odd.  So I made this private 
-		   function doSetup so it could be called from iniSetup and stop */
-		doSetup.call(this);
+
+		/* this method is in the constructor because otherwise, at lease using
+		   browserify and bebel, it can't be called by other methods using this.iniSetup()
+		*/
+		// initial setup
+		this.iniSetup = function () {
+			this.universeElem.addEventListener('click', this.loopCellsListener);
+			// when user click, start the game
+			document.getElementById('start').addEventListener('click', this.playListener);
+		}
 	}
     // stop the game
     stop(e) {
@@ -27,8 +30,7 @@ class Game {
         // stop the timer
         clearInterval(this.timer);
         // reinitialise the game
-        // this.iniSetup(); // causes an error "this.iniSetup is not a function!? bizarre"
-        doSetup.call(this);
+        this.iniSetup();
     }
 	// start the game
 	play(e){
@@ -66,15 +68,6 @@ class Game {
 
 // Private methods
 // --------------------
-
-function doSetup() {
-	// Note: using bind to pass the class' context to the callbacks
-	// not sure if this can be improved.
-	this.universeElem.addEventListener('click', this.loopCellsListener);
-	// when user click, start the game
-	document.getElementById('start').addEventListener('click', this.playListener);
-}
-
 
 // Loop over the cells
 function loopCells(e) {
