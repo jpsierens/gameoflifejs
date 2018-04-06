@@ -29,5 +29,5 @@ var game = new Game({
 });
 
 game.drawGrid();
-game.iniSetUp();
+game.iniSetup();
 

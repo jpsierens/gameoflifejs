@@ -4,15 +4,20 @@
   "description": "Game of Life in js",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "serve": "python -m SimpleHTTPServer 3000",
+    "servephp": "php -S localhost:3000"
   },
   "author": "Jean-Pierre Sierens",
   "license": "BSD-2-Clause",
   "devDependencies": {
-    "babelify": "~6.1.1",
-    "browserify": "~10.2.0",
-    "gulp": "~3.8.11",
-    "gulp-util": "~3.0.4",
-    "vinyl-source-stream": "~1.1.0"
+    "babel-cli": "^6.26.0",
+    "babel-preset-env": "^1.6.1",
+    "babelify": "^7.3.0",
+    "browserify": "^13.0.1",
+    "gulp": "^3.9.1",
+    "gulp-babel": "^7.0.1",
+    "gulp-util": "^3.0.7",
+    "vinyl-source-stream": "^1.1.0"
   }
 }
