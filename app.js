@@ -28,6 +28,5 @@ var game = new Game({
 	speed: 200
 });
 
-game.drawGrid();
 game.iniSetup();
 
