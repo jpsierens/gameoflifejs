@@ -8,18 +8,19 @@ const CELL_HEIGHT = 16;
 const UNIVERSE_LENGTH = 40;
 const UNIVERSE_HEIGHT = 40;
 
-var canvas = document.getElementById('universe');
-var ctx = canvas.getContext('2d');
+const canvas = document.getElementById('universe');
+const ctx = canvas.getContext('2d');
 
-var universe = new Universe({
+const universe = new Universe({
 	uniLength: UNIVERSE_LENGTH, 
 	uniHeight: UNIVERSE_HEIGHT,
 	cellLength: CELL_LENGTH,
 	cellHeight: CELL_LENGTH
 });
+
 universe.create();
 
-var game = new Game({
+const game = new Game({
 	// enhanced object literals
 	// 'canvas,' is the same as 'canvas: canvas,'
 	canvas,
