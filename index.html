@@ -3,21 +3,35 @@
 <head>
 	<title>Game Of Life</title>
 	<style type="text/css">
+	    body {
+	    	font-family: verdana, sans-serif;
+	    	width: 80%;
+	    	margin: auto;
+	    }
 		#universe{
 			display: block;
 			margin: 20px auto;
 			border: 1px solid black;
 		}
-		#start{
+		#start, #stop{
 			display: block;
 			width: 100px;
 			margin: 10px auto;
 		}
+		button:enabled {
+			font-weight: bold;
+		}
 	</style>
 </head>
 <body>
+<h1>Game of Life</h1>
+<p>Click to set some squares as 'living' then click the Start button, selecting a few adjacent squares is a good idea.</p>
+<p>
+	<button id="load">Load</button> <button id="save">Save</button>
+</p>
 	<canvas id="universe" width="640" height="480"></canvas>
 	<button id="start" >Start</button>
+    <button id="stop" disabled="true">Stop</button>
 
 	<script type="text/javascript" src="bundle.js"></script>
 </body>

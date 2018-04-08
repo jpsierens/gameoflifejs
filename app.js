@@ -1,5 +1,5 @@
-import Universe from './js/Universe';
-import Game from './js/Game';
+import Universe from './js/Universe.js';
+import Game from './js/Game.js';
 
 // in pixels
 const CELL_LENGTH = 16;
@@ -8,26 +8,26 @@ const CELL_HEIGHT = 16;
 const UNIVERSE_LENGTH = 40;
 const UNIVERSE_HEIGHT = 40;
 
-var canvas = document.getElementById('universe');
-var ctx = canvas.getContext('2d');
+const canvas = document.getElementById('universe');
+const ctx = canvas.getContext('2d');
 
-var universe = new Universe({
-	uniLength: UNIVERSE_LENGTH, 
-	uniHeight: UNIVERSE_HEIGHT,
-	cellLength: CELL_LENGTH,
-	cellHeight: CELL_LENGTH
+const universe = new Universe({
+    uniLength: UNIVERSE_LENGTH, 
+    uniHeight: UNIVERSE_HEIGHT,
+    cellLength: CELL_LENGTH,
+    cellHeight: CELL_HEIGHT
 });
+
 universe.create();
 
-var game = new Game({
-	// enhanced object literals
-	// 'canvas,' is the same as 'canvas: canvas,'
-	canvas,
-	context: ctx,
-	universe,
-	speed: 200
+const game = new Game({
+    // enhanced object literals
+    // 'canvas,' is the same as 'canvas: canvas,'
+    canvas,
+    context: ctx,
+    universe,
+    speed: 200
 });
 
-game.drawGrid();
-game.iniSetUp();
+game.iniSetup();
 
