@@ -19,46 +19,48 @@ class Game {
     }
 
     load() {
-//        try {
-            let cells =  localStorage.getItem('cells');
-            cells = JSON.parse(cells);
-            if (cells && cells.length === this.universe.length) {
-                Object.assign(this.universe.cells, cells);
-                
-                for (let i = 0; i < this.universe.height; i++) {
-                    for (let j=0; j < this.universe.length; j++) {
-                        const cell = this.universe.cells[i][j];
-                        this.ctx.fillStyle = (cell.state) ? '#333' : 'white';
-                        this.ctx.fillRect(cell.x + 1,
-                                          cell.y + 1,
-                                          this.universe.cellLength - 2,
-                                          this.universe.cellHeight - 2
-                                          );
-                    }
+        const cells =  JSON.parse(localStorage.getItem('cells'));
+        
+        if (cells && cells.length === this.universe.length) {
+            // assign the loaded cells to the grid
+            Object.assign(this.universe.cells, cells);
+            // loop over grid and paint loaded cells
+            for (let i = 0; i < this.universe.height; i++) {
+                for (let j=0; j < this.universe.length; j++) {
+                    const cell = this.universe.cells[i][j];
+                    this.ctx.fillStyle = (cell.state) ? '#333' : 'white';
+                    this.ctx.fillRect(cell.x + 1,
+                                      cell.y + 1,
+                                      this.universe.cellLength - 2,
+                                      this.universe.cellHeight - 2
+                    );
                 }
+            }
 
-            } 
-//        }
-//        catch (e) {
-//            return e;
-//        }
+        } 
     }
 
     save() {
         const cells = JSON.stringify(this.universe.cells);
         localStorage.setItem('cells', cells);
+        document.getElementById('load').disabled = false;
     }
 
     // initial setup
     iniSetup() {
         const startBtn = document.getElementById('start');
+        const saveBtn = document.getElementById('save');
+        const loadBtn = document.getElementById('load');
         this.universeElem.addEventListener('click', this.loopCellsListener);
         // when user click, start the game
         startBtn.addEventListener('click', this.playListener);
         startBtn.disabled = false;
 
-        document.getElementById('save').addEventListener('click', this.saveListener);
-        document.getElementById('load').addEventListener('click', this.loadListener);
+        saveBtn.addEventListener('click', this.saveListener);
+        loadBtn.addEventListener('click', this.loadListener);
+        if (!localStorage.getItem('cells')) {
+            loadBtn.disabled = true;
+        }
     }
 
     // start the game
@@ -89,8 +91,8 @@ class Game {
         clearInterval(this.timer);
         // reinitialise the game
         this.iniSetup();
-        
-        e.preventDefault();
+        // if e isn't null then prevent default click behaviour
+        e && e.preventDefault();
     }
 }
 
