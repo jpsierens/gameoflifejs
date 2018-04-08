@@ -1,4 +1,4 @@
-## Game of Life in ES6
+# Game of Life in ES6
 
 To play, first download the repository,then, in your terminal, run this command: 
 
@@ -14,7 +14,7 @@ After that, either use File Open (Ctrl+o or Cmd+o) and navigate to the directory
 
 in which case you can go to localhost:3000 to play the game.
 
-Note, in this version there are a few additions:
+<b>Note</b>, in this version there are a few additions:
 1. You can stop the game, freezing it at any point, to perhaps add or remove squares
 2. You can save and load games (useful if you want to put in a Glider Gun for instance)
 
