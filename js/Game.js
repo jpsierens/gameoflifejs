@@ -12,8 +12,41 @@ class Game {
         this.stopListener = this.stop.bind(this);
         this.playListener = this.play.bind(this);
         this.loopCellsListener = loopCells.bind(this);
+        this.loadListener = this.load.bind(this);
+        this.saveListener = this.save.bind(this);
 
         drawGrid.apply(this);
+    }
+
+    load() {
+//        try {
+            let cells =  localStorage.getItem('cells');
+            cells = JSON.parse(cells);
+            if (cells && cells.length === this.universe.length) {
+                Object.assign(this.universe.cells, cells);
+                
+                for (let i = 0; i < this.universe.height; i++) {
+                    for (let j=0; j < this.universe.length; j++) {
+                        const cell = this.universe.cells[i][j];
+                        this.ctx.fillStyle = (cell.state) ? '#333' : 'white';
+                        this.ctx.fillRect(cell.x + 1,
+                                          cell.y + 1,
+                                          this.universe.cellLength - 2,
+                                          this.universe.cellHeight - 2
+                                          );
+                    }
+                }
+
+            } 
+//        }
+//        catch (e) {
+//            return e;
+//        }
+    }
+
+    save() {
+        const cells = JSON.stringify(this.universe.cells);
+        localStorage.setItem('cells', cells);
     }
 
     // initial setup
@@ -23,6 +56,9 @@ class Game {
         // when user click, start the game
         startBtn.addEventListener('click', this.playListener);
         startBtn.disabled = false;
+
+        document.getElementById('save').addEventListener('click', this.saveListener);
+        document.getElementById('load').addEventListener('click', this.loadListener);
     }
 
     // start the game
