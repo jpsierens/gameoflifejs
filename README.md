@@ -1,6 +1,6 @@
 # Game of Life in ES6
 
-To play, first download the repository,then, in your terminal, run this command: 
+To play, first download the repository, then, in your terminal, run this command (assuming you have node installed): 
 
 <code>npm install</code> 
 
