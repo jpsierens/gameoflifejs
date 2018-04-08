@@ -77,8 +77,8 @@ class Game {
         this.universeElem.removeEventListener('click', this.loopCellsListener);
         // game loop, store handle for restart to stop the timer
         this.timer = setInterval(step.bind(this), this.speed);
-
-        e.preventDefault();
+        // if e isn't null then prevent default click behaviour
+        e && e.preventDefault();
     }
 
     // stop the game
