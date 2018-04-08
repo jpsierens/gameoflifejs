@@ -1,6 +1,6 @@
 class Game {
     // set up instance variables
-    constructor(options){
+    constructor(options) {
         this.timer = null;
         this.canvas = options.canvas;
         this.ctx = options.context;
@@ -12,23 +12,61 @@ class Game {
         this.stopListener = this.stop.bind(this);
         this.playListener = this.play.bind(this);
         this.loopCellsListener = loopCells.bind(this);
+        this.loadListener = this.load.bind(this);
+        this.saveListener = this.save.bind(this);
 
         drawGrid.apply(this);
     }
 
+    load() {
+        const cells =  JSON.parse(localStorage.getItem('cells'));
+        
+        if (cells && cells.length === this.universe.length) {
+            // assign the loaded cells to the grid
+            Object.assign(this.universe.cells, cells);
+            // loop over grid and paint loaded cells
+            for (let i = 0; i < this.universe.height; i++) {
+                for (let j=0; j < this.universe.length; j++) {
+                    const cell = this.universe.cells[i][j];
+                    this.ctx.fillStyle = (cell.state) ? '#333' : 'white';
+                    this.ctx.fillRect(cell.x + 1,
+                                      cell.y + 1,
+                                      this.universe.cellLength - 2,
+                                      this.universe.cellHeight - 2
+                    );
+                }
+            }
+
+        } 
+    }
+
+    save() {
+        const cells = JSON.stringify(this.universe.cells);
+        localStorage.setItem('cells', cells);
+        document.getElementById('load').disabled = false;
+    }
+
     // initial setup
-   iniSetup() {
-        let startBtn = document.getElementById('start');
+    iniSetup() {
+        const startBtn = document.getElementById('start');
+        const saveBtn = document.getElementById('save');
+        const loadBtn = document.getElementById('load');
         this.universeElem.addEventListener('click', this.loopCellsListener);
         // when user click, start the game
         startBtn.addEventListener('click', this.playListener);
         startBtn.disabled = false;
+
+        saveBtn.addEventListener('click', this.saveListener);
+        loadBtn.addEventListener('click', this.loadListener);
+        if (!localStorage.getItem('cells')) {
+            loadBtn.disabled = true;
+        }
     }
 
     // start the game
-    play(e){
-        let startBtn = document.getElementById('start');
-        let stopBtn = document.getElementById('stop');
+    play(e) {
+        const startBtn = document.getElementById('start');
+        const stopBtn = document.getElementById('stop');
         // add click event to stop button
         stopBtn.addEventListener('click', this.stopListener);
         stopBtn.disabled = false;
@@ -39,11 +77,13 @@ class Game {
         this.universeElem.removeEventListener('click', this.loopCellsListener);
         // game loop, store handle for restart to stop the timer
         this.timer = setInterval(step.bind(this), this.speed);
+
+        e.preventDefault();
     }
 
     // stop the game
     stop(e) {
-        let stopBtn = document.getElementById('stop');
+        const stopBtn = document.getElementById('stop');
         // remove restart listener, it'll be added again if game start clicked
         stopBtn.removeEventListener('click', this.stopListener);
         stopBtn.disabled = true;
@@ -51,6 +91,8 @@ class Game {
         clearInterval(this.timer);
         // reinitialise the game
         this.iniSetup();
+        // if e isn't null then prevent default click behaviour
+        e && e.preventDefault();
     }
 }
 
@@ -61,23 +103,22 @@ function drawGrid() {
     this.ctx.strokeStyle = '#777';
     this.ctx.lineWidth = 1;
     // vertical lines
-    for (let i = 1; i<this.universe.length; i++){
+    for (let i = 1; i<this.universe.length; i++) {
         this.ctx.beginPath();
-        this.ctx.moveTo(this.universe.cellLength*i, 0);
-        this.ctx.lineTo(this.universe.cellLength*i,
-                        this.universe.height*this.universe.cellHeight);
+        this.ctx.moveTo(this.universe.cellLength * i, 0);
+        this.ctx.lineTo(this.universe.cellLength * i,
+                        this.universe.height * this.universe.cellHeight);
         this.ctx.stroke();
     }
     // horizontal lines
-    for (let i = 1; i<this.universe.height; i++){
+    for (let i = 1; i<this.universe.height; i++) {
         this.ctx.beginPath();
-        this.ctx.moveTo(0, this.universe.cellHeight*i);
-        this.ctx.lineTo(this.universe.length*this.universe.cellLength,
-                        this.universe.cellHeight*i);
+        this.ctx.moveTo(0, this.universe.cellHeight * i);
+        this.ctx.lineTo(this.universe.length * this.universe.cellLength,
+                        this.universe.cellHeight * i);
         this.ctx.stroke();
     }
 }
-
 
 // Loop over the cells initialising cells when the grid is clicked
 function loopCells(e) {
@@ -85,12 +126,12 @@ function loopCells(e) {
     const pageX = e.pageX - universeElem.offsetLeft;
     const pageY = e.pageY - universeElem.offsetTop;
 
-    for (let i = 0; i<this.universe.height; i++){
-        for (let j=0; j<this.universe.length; j++){
-            let cell = this.universe.cells[i][j];
+    for (let i = 0; i < this.universe.height; i++) {
+        for (let j=0; j < this.universe.length; j++) {
+            const cell = this.universe.cells[i][j];
             // handle the click
-            if (pageX > cell.x && pageX < cell.x+this.universe.cellLength &&
-                pageY > cell.y && pageY < cell.y+this.universe.cellHeight ) {
+            if (pageX > cell.x && pageX < cell.x + this.universe.cellLength &&
+                pageY > cell.y && pageY < cell.y + this.universe.cellHeight ) {
                 // chnage the cells
                 changeCells.apply(this, [cell]);
             }
@@ -99,30 +140,29 @@ function loopCells(e) {
 }
 
 // 1 step = 1 generation
-function step(){
+function step() {
     const self = this;
     const cellsToChange = [];
-    let lifeExists;
-    for (let i = 0; i<this.universe.height; i++){
-        for (let j=0; j<this.universe.length; j++){
-            let cell = this.universe.cells[i][j];
+    for (let i = 0; i < this.universe.height; i++) {
+        for (let j=0; j < this.universe.length; j++) {
+            const cell = this.universe.cells[i][j];
             transitions(self, cell, cellsToChange);
         }
     }
 
-    lifeExists = cellsToChange.length > 0 ? true : false;
+    const lifeExists = cellsToChange.length > 0 ? true : false;
 
     if (lifeExists === true) {
         // update the cells that should be updated
-        for (let i=0; i<cellsToChange.length; i++){
-            let cell = getCellById(self, cellsToChange[i]);
+        for (let i=0; i<cellsToChange.length; i++) {
+            const cell = getCellById(self, cellsToChange[i]);
             // if the cell state was 0 change to 1, and vice versa.
             changeCells.apply(this, [cell]);
         }
     }
     else {
         this.stop(null);
-        console.log('life has ceased!');
+        // console.log('life has ceased!');
     }
 }
 
@@ -136,17 +176,17 @@ function transitions(self, cell, cellsToChange) {
     const uniHeight = self.universe.height;
     let neighboursAlive = 0;
     // Go through the neighbours of each cell.
-    for (let i=0; i<8; i++){
-        let neighbourID = cell.neighbours[i];
+    for (let i = 0; i < 8; i++) {
+        const neighbourID = cell.neighbours[i];
         if (neighbourID >= uniLength*uniHeight || neighbourID <0) {
             continue;
         }
-        let neighbour = getCellById(self, neighbourID);
+        const neighbour = getCellById(self, neighbourID);
         if (neighbour.state === 1) {
             neighboursAlive++;
         }
     }
-    if (cell.state === 1){
+    if (cell.state === 1) {
         // ze life rules
         // -------------------
         // 1) Any live cell with fewer than two live neighbours dies, as
@@ -183,10 +223,9 @@ function changeCells(cell) {
 }
 
 function getCellById(self, id) {
-    let row = Math.floor(id/self.universe.length);
-    let column = id % self.universe.length;
+    const row = Math.floor(id/self.universe.length);
+    const column = id % self.universe.length;
     return self.universe.cells[row][column];
 }
 
-
-module.exports = Game;
+export default Game;
