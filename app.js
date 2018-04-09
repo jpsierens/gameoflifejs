@@ -26,7 +26,8 @@ const game = new Game({
     canvas,
     context: ctx,
     universe,
-    speed: 200
+    speed: 200,
+    formID: 'startstop'
 });
 
 game.initialise();

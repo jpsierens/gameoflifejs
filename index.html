@@ -1,45 +1,26 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title>Game Of Life</title>
-	<style type="text/css">
-	    body {
-	    	font-family: verdana, sans-serif;
-	    	width: 80%;
-	    	margin: auto;
-	    }
-		#universe{
-			display: block;
-			margin: 20px auto;
-			border: 1px solid black;
-		}
-		#start, #stop{
-			display: block;
-			width: 100px;
-			margin: 10px auto;
-		}
-		button:enabled {
-			font-weight: bold;
-		}
-        aside {
-            margin: 2em;
-            padding: 0.5em 1em;
-            border: thin solid #ccc;
-        }
-        aside li {
-            margin: 0.5em 0;
-        }
-	</style>
+    <title>Game Of Life</title>
+    <link rel="stylesheet" type="text/css" href="gol.css" />
 </head>
 <body>
 <h1>Game of Life</h1>
-<p>Click to set some squares as 'living' then click the Start button, selecting a few adjacent squares is a good idea.</p>
+<p>Click to set some squares as 'living' then click the Start button, selecting a few adjacent squares is a good
+    idea.</p>
 <p>
-	<button id="load">Load</button> <button id="save">Save</button> <button id="gG" title="Loads a never-ending pattern which creates 'gliders'">Load Glider Gun</button>
+    <button id="load">Load</button>
+    <button id="save">Save</button>
+    <button id="gG" title="Loads a never-ending pattern which creates 'gliders'">Load Glider Gun</button>
 </p>
-	<canvas id="universe" width="640" height="480"></canvas>
-	<button id="start" >Start</button>
-    <button id="stop" disabled="true">Stop</button>
+<canvas id="universe" width="640" height="480"></canvas>
+
+<form id="startstop" method="get" action="#">
+    <input id="toggle-on" class="toggle toggle-left" name="toggle" value="start" type="radio"/>
+    <label for="toggle-on" class="btn">Start</label>
+    <input id="toggle-off" class="toggle toggle-right" name="toggle" value="stop" type="radio" checked/>
+    <label for="toggle-off" class="btn">Stop</label>
+</form>
 
 <aside>
     <h2>ze life rules</h2>
@@ -52,6 +33,6 @@
 
 </aside>
 
-	<script type="text/javascript" src="bundle.js"></script>
+<script type="text/javascript" src="bundle.js"></script>
 </body>
 </html>
