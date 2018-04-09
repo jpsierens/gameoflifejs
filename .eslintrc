@@ -38,4 +38,14 @@ rules:
   space-before-blocks: [2, "always"]
   space-before-function-paren: [2, "never"]
   space-in-parens: ["warn", "never"]
-  spaced-comment: ["warn", "always"]
+  "spaced-comment": ["warn", "always", {
+    "line": {
+        "markers": ["/"],
+        "exceptions": ["-", "+"]
+    },
+    "block": {
+        "markers": ["/"],
+        "exceptions": ["*"],
+        "balanced": true
+    }
+}]
