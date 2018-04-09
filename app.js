@@ -29,5 +29,5 @@ const game = new Game({
     speed: 200
 });
 
-game.iniSetup();
+game.initialise();
 
