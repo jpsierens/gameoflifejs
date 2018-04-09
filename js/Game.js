@@ -57,6 +57,10 @@ class Game {
 
         /* rather than a const I'm using an object property, seems easier */
         this.frm = document.getElementById(this.formID);
+        // ensure toggle is in stop state. remove listener first to prevent it from firing when the state is changed
+        this.frm.removeEventListener('change', this.startStopListener);
+        this.frm.querySelector('input[type=radio][value=stop]').checked = true;
+        // now add the listener back
         this.frm.addEventListener('change', this.startStopListener);
 
         this.universeElem.addEventListener('click', this.loopCellsListener);
