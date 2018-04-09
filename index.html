@@ -21,6 +21,14 @@
 		button:enabled {
 			font-weight: bold;
 		}
+        aside {
+            margin: 2em;
+            padding: 0.5em 1em;
+            border: thin solid #ccc;
+        }
+        aside li {
+            margin: 0.5em 0;
+        }
 	</style>
 </head>
 <body>
@@ -32,6 +40,17 @@
 	<canvas id="universe" width="640" height="480"></canvas>
 	<button id="start" >Start</button>
     <button id="stop" disabled="true">Stop</button>
+
+<aside>
+    <h2>ze life rules</h2>
+    <ol>
+        <li>Any live cell with fewer than two live neighbours dies, as if caused by under-population.</li>
+        <li>Any live cell with two or three live neighbours lives on to the next generation.</li>
+        <li>Any live cell with more than three live neighbours dies, as if by overcrowding.</li>
+        <li>Any dead cell with exactly three live neighbours becomes a live cell, as if by reproduction.</li>
+    </ol>
+
+</aside>
 
 	<script type="text/javascript" src="bundle.js"></script>
 </body>
