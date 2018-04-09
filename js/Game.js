@@ -11,9 +11,9 @@ class Game {
         this.universeElem = document.getElementById('universe');
         this.speed = options.speed;
 
-        // store refeences to bound listeners since otherwise you can't remove the listeners
-        this.stopListener = this.stop.bind(this);
-        this.playListener = this.play.bind(this);
+        this.formID = options.formID || 'startstop';
+        // store references to bound listeners since otherwise you can't remove the listeners
+        this.startStopListener = this.startStop.bind(this);
         this.loopCellsListener = loopCells.bind(this);
         this.loadListener = this.load.bind(this);
         this.saveListener = this.save.bind(this);
@@ -51,15 +51,15 @@ class Game {
      * initial setup, also called when the game is stopped to return to the initial state
      */
     initialise() {
-        const startBtn = document.getElementById('start');
         const saveBtn = document.getElementById('save');
         const loadBtn = document.getElementById('load');
         const loadGliderGunBtn = document.getElementById('gG');
 
+        /* rather than a const I'm using an object property, seems easier */
+        this.frm = document.getElementById(this.formID);
+        this.frm.addEventListener('change', this.startStopListener);
+
         this.universeElem.addEventListener('click', this.loopCellsListener);
-        // when user click, start the game
-        startBtn.addEventListener('click', this.playListener);
-        startBtn.disabled = false;
 
         saveBtn.addEventListener('click', this.saveListener);
         loadBtn.addEventListener('click', this.loadListener);
@@ -69,19 +69,21 @@ class Game {
         loadGliderGunBtn.addEventListener('click', this.loadGliderGunListener);
     }
 
+    startStop(e) {
+        const action = this.frm.querySelector('input[type=radio]:checked').value;
+        if (action === 'start') {
+            this.play(e);
+        }
+        else {
+            this.stop(e);
+        }
+    }
+
     /**
      * start the game
      * @param e the click event or null
      */
     play(e) {
-        const startBtn = document.getElementById('start');
-        const stopBtn = document.getElementById('stop');
-        // add click event to stop button
-        stopBtn.addEventListener('click', this.stopListener);
-        stopBtn.disabled = false;
-        // remove the play click listener
-        startBtn.removeEventListener('click', this.playListener);
-        startBtn.disabled = true;
         // remove god mode
         this.universeElem.removeEventListener('click', this.loopCellsListener);
         // game loop, store handle for restart to stop the timer
@@ -95,10 +97,6 @@ class Game {
      * @param e the click event or null
      */
     stop(e) {
-        const stopBtn = document.getElementById('stop');
-        // remove restart listener, it'll be added again if game start clicked
-        stopBtn.removeEventListener('click', this.stopListener);
-        stopBtn.disabled = true;
         // stop the timer
         clearInterval(this.timer);
         // reinitialise the game
