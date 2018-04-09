@@ -19,6 +19,7 @@ class Game {
     }
 
     loadGliderGun() {
+        this.stop();
         Object.assign(this.universe.cells, getGliderGun.apply(this));
         redraw.apply(this);
     }
@@ -27,6 +28,7 @@ class Game {
         const cells =  JSON.parse(localStorage.getItem('cells'));
         
         if (cells && cells.length === this.universe.length) {
+            this.stop();
             // assign the loaded cells to the grid
             Object.assign(this.universe.cells, cells);
             redraw.apply(this);
