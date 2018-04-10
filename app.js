@@ -3,10 +3,10 @@ import Game from './js/Game.js';
 
 // in pixels
 const CELL_LENGTH = 16;
-const CELL_HEIGHT = 16;
+const CELL_HEIGHT = CELL_LENGTH;
 // in cell units
 const UNIVERSE_LENGTH = 40;
-const UNIVERSE_HEIGHT = 40;
+const UNIVERSE_HEIGHT = 27;
 
 const canvas = document.getElementById('universe');
 const ctx = canvas.getContext('2d');

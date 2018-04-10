@@ -4,8 +4,12 @@ class Game {
      * @param options
      */
     constructor(options) {
+        const height = options.universe.cellHeight * options.universe.height;
+        const width = options.universe.cellLength * options.universe.length;
         this.timer = null;
         this.canvas = options.canvas;
+        this.canvas.setAttribute('width', width);
+        this.canvas.setAttribute('height', height);
         this.ctx = options.context;
         this.universe = options.universe;
         this.universeElem = document.getElementById('universe');
