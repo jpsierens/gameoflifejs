@@ -1,14 +1,20 @@
 :root{
     --dark-colour: #454545;
+    --cell-size: 16;
+    --universe-size: 40;
 }
-
 body {
     font-family: verdana, sans-serif;
+    font-size: 80%;
+}
+
+#wrapper {
     width: 80%;
-    margin: auto;
+    margin:0 auto 2em auto;
 }
 
 #universe {
+    box-sizing: border-box;
     display: block;
     margin: 20px auto;
     border: 1px solid black;
@@ -19,7 +25,6 @@ button:enabled {
 }
 
 aside {
-    margin: 2em;
     padding: 0.5em 1em;
     border: thin solid #ccc;
 }
@@ -27,7 +32,21 @@ aside {
 aside li {
     margin: 0.5em 0;
 }
+aside h2 {
+    margin: 0 0 0.25em 0;
+    font-size: 120%;
+    font-style: italic;
+}
 
+#instructions {
+    padding: 2em;
+    float: left;
+    width: 40%;
+}
+#game {
+    display: flex;
+    flex-direction: column;
+}
 /* start/stop toggle button styling */
 #startstop {
     box-sizing: border-box;

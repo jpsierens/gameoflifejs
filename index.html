@@ -6,32 +6,35 @@
 </head>
 <body>
 <h1>Game of Life</h1>
-<p>Click to set some squares as 'living' then click the Start button, selecting a few adjacent squares is a good
-    idea.</p>
-<p>
-    <button id="load">Load</button>
-    <button id="save">Save</button>
-    <button id="gG" title="Loads a never-ending pattern which creates 'gliders'">Load Glider Gun</button>
-</p>
-<canvas id="universe" width="640" height="480"></canvas>
+<section id="instructions">
+	<aside>
+	    <h2>ze life rules</h2>
+	    <ol>
+	        <li>Any live cell with fewer than two live neighbours dies, as if caused by under-population.</li>
+	        <li>Any live cell with two or three live neighbours lives on to the next generation.</li>
+	        <li>Any live cell with more than three live neighbours dies, as if by overcrowding.</li>
+	        <li>Any dead cell with exactly three live neighbours becomes a live cell, as if by reproduction.</li>
+	    </ol>
+	</aside>
+	<h2>Instructions</h2>
+	<p>Click to set some squares as 'living' then click the Start button, selecting a few adjacent squares is a good
+	    idea.</p>
+	<p>
+	    <button id="load">Load</button>
+	    <button id="save">Save</button>
+	    <button id="gG" title="Loads a never-ending pattern which creates 'gliders'">Load Glider Gun</button>
+	</p>
+</section>
+<section id="game">
+	<canvas id="universe"></canvas>
 
-<form id="startstop" method="get" action="#">
-    <input id="toggle-on" class="toggle toggle-left" name="toggle" value="start" type="radio"/>
-    <label for="toggle-on" class="btn">Start</label>
-    <input id="toggle-off" class="toggle toggle-right" name="toggle" value="stop" type="radio" checked/>
-    <label for="toggle-off" class="btn">Stop</label>
-</form>
-
-<aside>
-    <h2>ze life rules</h2>
-    <ol>
-        <li>Any live cell with fewer than two live neighbours dies, as if caused by under-population.</li>
-        <li>Any live cell with two or three live neighbours lives on to the next generation.</li>
-        <li>Any live cell with more than three live neighbours dies, as if by overcrowding.</li>
-        <li>Any dead cell with exactly three live neighbours becomes a live cell, as if by reproduction.</li>
-    </ol>
-
-</aside>
+	<form id="startstop" method="get" action="#">
+	    <input id="toggle-on" class="toggle toggle-left" name="toggle" value="start" type="radio"/>
+	    <label for="toggle-on" class="btn">Start</label>
+	    <input id="toggle-off" class="toggle toggle-right" name="toggle" value="stop" type="radio" checked/>
+	    <label for="toggle-off" class="btn">Stop</label>
+	</form>
+</section>
 
 <script type="text/javascript" src="bundle.js"></script>
 </body>
